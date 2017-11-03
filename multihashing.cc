@@ -8,7 +8,6 @@ extern "C" {
     #include "bcrypt.h"
     #include "keccak.h"
     #include "quark.h"
-    #include "blake2s.h"
     #include "scryptjane.h"
     #include "scryptn.h"
     #include "skein.h"
@@ -316,30 +315,6 @@ NAN_METHOD(blake) {
         NanNewBufferHandle(output, 32)
     );
 }
-
-NAN_METHOD(blake2s) {
-    NanScope();
-
-    if (args.Length() < 1)
-        return THROW_ERROR_EXCEPTION("You must provide one argument.");
-
-    Local<Object> target = args[0]->ToObject();
-
-    if(!Buffer::HasInstance(target))
-        return THROW_ERROR_EXCEPTION("Argument should be a buffer object.");
-
-    char * input = Buffer::Data(target);
-    char output[32];
-
-    uint32_t input_len = Buffer::Length(target);
-
-    blake2s_hash(input, output);
-
-    NanReturnValue(
-        NanNewBufferHandle(output, 32)
-    );
-}
-
 
 NAN_METHOD(fugue) {
     NanScope();
