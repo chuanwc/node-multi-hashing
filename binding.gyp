@@ -13,8 +13,9 @@
                 "bcrypt.c",
                 "groestl.c",
                 "blake.c",
-                "fugue.c",
-                "qubit.c",
+                "blake2s.c",
+                "gost.c",
+                
                 "hefty1.c",
                 "shavite3.c",
                 "x13.c",
@@ -32,10 +33,9 @@
                 "Lyra2REV2.c",
 		"Lyra2Z.c",
                 "sha3/sph_hefty1.c",
-                "sha3/sph_fugue.c",
+                
                 "sha3/aes_helper.c",
                 "sha3/sph_blake.c",
-                "sha3/sph_blake2s.c",
                 "sha3/sph_bmw.c",
                 "sha3/sph_cubehash.c",
                 "sha3/sph_echo.c",
@@ -58,10 +58,17 @@
                 "crypto/hash.c",
                 "crypto/aesb.c",
                 "crypto/wild_keccak.cpp",
+		"tribus.c",
+            
+
+
+
+
             ],
             "include_dirs": [
                 "crypto",
                 "sha3",
+		"sph",
                 "<!(node -e \"require('nan')\")"
             ],
             "cflags_cc": [

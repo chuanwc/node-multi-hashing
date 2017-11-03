@@ -1,11 +1,12 @@
-node-multi-hashing
+Node-multi-hashing for tribus hash
 ===============
 
 Cryptocurrency hashing functions for node.js.
-Modified version by ocminer for use with xzc (zcoin) - lyra2rev2 is modified to only work with xzc
+Modified node version v0.12+ by VEGACOIN - Tribus is modified to work with Vegacoin
 
 Algorithms
 ----------
+* tribus
 * quark
 * x11
 * x13
@@ -22,8 +23,6 @@ Algorithms
 * qubit
 * hefty1
 * shavite3
-* whirlpoolx
-* blake2s
 
 Usage
 -----
@@ -40,7 +39,7 @@ So far this native Node.js addon can do the following hashing algos
 ```javascript
 var multiHashing = require('multi-hashing');
 
-var algorithms = ['quark', 'x11', 'scrypt', 'scryptn', 'scryptjane', 'keccak', 'bcrypt', 'skein', 'blake', 'blake2s'];
+var algorithms = ['quark', 'x11', 'scrypt', 'scryptn', 'scryptjane', 'keccak', 'bcrypt', 'skein', 'blake'];
 
 var data = new Buffer("7000000001e980924e4e1109230383e66d62945ff8e749903bea4336755c00000000000051928aff1b4d72416173a8c3948159a09a73ac3bb556aa6bfbcad1a85da7f4c1d13350531e24031b939b9e2b", "hex");
 

@@ -8,13 +8,14 @@ extern "C" {
     #include "bcrypt.h"
     #include "keccak.h"
     #include "quark.h"
+    #include "blake2s.h"
     #include "scryptjane.h"
     #include "scryptn.h"
     #include "skein.h"
     #include "x11.h"
     #include "groestl.h"
     #include "blake.h"
-    #include "fugue.h"
+    #include "gost.h"
     #include "qubit.h"
     #include "hefty1.h"
     #include "shavite3.h"
@@ -27,6 +28,7 @@ extern "C" {
     #include "Lyra2.h"
     #include "Lyra2REV2.h"
     #include "Lyra2Z.h"
+    #include "tribus.h"
 }
 
 #define THROW_ERROR_EXCEPTION(x) NanThrowError(x)
@@ -316,7 +318,7 @@ NAN_METHOD(blake) {
     );
 }
 
-NAN_METHOD(fugue) {
+NAN_METHOD(blake2s) {
     NanScope();
 
     if (args.Length() < 1)
@@ -332,10 +334,34 @@ NAN_METHOD(fugue) {
 
     uint32_t input_len = Buffer::Length(target);
 
-    fugue_hash(input, output, input_len);
+    blake2s_hash(input, output);
 
     NanReturnValue(
         NanNewBufferHandle(output, 32)
+    );
+}
+
+
+NAN_METHOD(gost) {
+    NanScope();
+
+    if (args.Length() < 1)
+        return THROW_ERROR_EXCEPTION("You must provide one argument.");
+
+    Local<Object> target = args[0]->ToObject();
+
+    if(!Buffer::HasInstance(target))
+        return THROW_ERROR_EXCEPTION("Argument should be a buffer object.");
+
+    char * input = Buffer::Data(target);
+    char output[8];
+
+    uint32_t input_len = Buffer::Length(target);
+
+    gost_hash(input, output, input_len);
+
+    NanReturnValue(
+        NanNewBufferHandle(output, 8)
     );
 }
 
@@ -589,6 +615,28 @@ NAN_METHOD(lyra2z) {
     );
 }
 
+NAN_METHOD(tribus) {
+    NanScope();
+
+    if (args.Length() < 1)
+        return THROW_ERROR_EXCEPTION("You must provide one argument.");
+
+    Local<Object> target = args[0]->ToObject();
+
+    if(!Buffer::HasInstance(target))
+        return THROW_ERROR_EXCEPTION("Argument should be a buffer object.");
+
+    char * input = Buffer::Data(target);
+    char output[32];
+
+    tribus_hash(input, output);
+
+    NanReturnValue(
+        NanNewBufferHandle(output, 32)
+    );
+}
+
+
 void init(Handle<Object> exports) {
     exports->Set(NanNew<String>("quark"), NanNew<FunctionTemplate>(quark)->GetFunction());
     exports->Set(NanNew<String>("blake2s"), NanNew<FunctionTemplate>(blake2s)->GetFunction());
@@ -602,7 +650,7 @@ void init(Handle<Object> exports) {
     exports->Set(NanNew<String>("groestl"), NanNew<FunctionTemplate>(groestl)->GetFunction());
     exports->Set(NanNew<String>("groestlmyriad"), NanNew<FunctionTemplate>(groestlmyriad)->GetFunction());
     exports->Set(NanNew<String>("blake"), NanNew<FunctionTemplate>(blake)->GetFunction());
-    exports->Set(NanNew<String>("fugue"), NanNew<FunctionTemplate>(fugue)->GetFunction());
+    exports->Set(NanNew<String>("gost"), NanNew<FunctionTemplate>(gost)->GetFunction());
     exports->Set(NanNew<String>("qubit"), NanNew<FunctionTemplate>(qubit)->GetFunction());
     exports->Set(NanNew<String>("hefty1"), NanNew<FunctionTemplate>(hefty1)->GetFunction());
     exports->Set(NanNew<String>("shavite3"), NanNew<FunctionTemplate>(shavite3)->GetFunction());
@@ -614,6 +662,7 @@ void init(Handle<Object> exports) {
     exports->Set(NanNew<String>("lyra2re"), NanNew<FunctionTemplate>(lyra2re)->GetFunction());
     exports->Set(NanNew<String>("lyra2rev2"), NanNew<FunctionTemplate>(lyra2rev2)->GetFunction());
     exports->Set(NanNew<String>("lyra2z"), NanNew<FunctionTemplate>(lyra2z)->GetFunction());
+    exports->Set(NanNew<String>("tribus"), NanNew<FunctionTemplate>(tribus)->GetFunction());
 }
 
 NODE_MODULE(multihashing, init)
